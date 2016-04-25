@@ -40,14 +40,13 @@ class PlacesController < ApplicationController
     long = r["latlong"]["coords"]["longitude"]
     lat = r["latlong"]["coords"]["latitude"]
     response = HTTParty.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=#{lat},#{long}&radius=30&key=" + ENV["GOOGLE_PLACE_API"])
-
     response['results'].each do |place|
       place_id = place['place_id']
       @places << HTTParty.get('https://maps.googleapis.com/maps/api/place/details/json?placeid='+ place_id +'&key=' + ENV["GOOGLE_PLACE_API"])
     end
 
     @places.each do |place|
-      p = Place.create({
+      new_p = Place.new({
         name: place['result']['name'],
       	address: place['result']['formatted_address'],
       	phone: place['result']['international_phone_number'],
@@ -55,12 +54,12 @@ class PlacesController < ApplicationController
       	user_id: 1,
       	favorite: false
       	})
-      # Review.create({
-      #   name: place['author_name'],
-      #   content: place['text'],
-      #   rating: place['rating'],
-      #   place_id: p.id
-      #   })
+        if new_p.save
+          new_p
+        else
+          return "This is wrong"
+        end
+
     end
   end
 
