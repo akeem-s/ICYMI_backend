@@ -37,16 +37,13 @@ class PlacesController < ApplicationController
   def create
     @places = []
     r = JSON.parse(request.body.string)
-    p r
     long = r["latlong"]["coords"]["longitude"]
     lat = r["latlong"]["coords"]["latitude"]
-    response = HTTParty.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=#{lat},#{long}&radius=3000&key=" + ENV["GOOGLE_PLACE_API"])
-    p response
+    response = HTTParty.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=#{lat},#{long}&radius=30&key=" + ENV["GOOGLE_PLACE_API"])
     response['results'].each do |place|
       place_id = place['place_id']
       @places << HTTParty.get('https://maps.googleapis.com/maps/api/place/details/json?placeid='+ place_id +'&key=' + ENV["GOOGLE_PLACE_API"])
     end
-    p @places
 
 
     @places.each do |place|
