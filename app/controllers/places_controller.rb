@@ -37,6 +37,7 @@ class PlacesController < ApplicationController
   def create
     @places = []
     r = JSON.parse(request.body.string)
+    p r
     long = r["latlong"]["coords"]["longitude"]
     lat = r["latlong"]["coords"]["latitude"]
     response = HTTParty.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=#{lat},#{long}&radius=30&key=" + ENV["GOOGLE_PLACE_API"])
@@ -44,6 +45,8 @@ class PlacesController < ApplicationController
       place_id = place['place_id']
       @places << HTTParty.get('https://maps.googleapis.com/maps/api/place/details/json?placeid='+ place_id +'&key=' + ENV["GOOGLE_PLACE_API"])
     end
+    p @places
+
 
     @places.each do |place|
       new_p = Place.new({
@@ -56,6 +59,7 @@ class PlacesController < ApplicationController
       	})
         if new_p.save
           new_p
+          p new_p
         else
           puts "Failed to save place"
           p new_p.errors.full_messages
