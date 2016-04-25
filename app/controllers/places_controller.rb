@@ -57,6 +57,8 @@ class PlacesController < ApplicationController
         if new_p.save
           new_p
         else
+          puts "Failed to save place"
+          p new_p.errors.full_messages
           return "This is wrong"
         end
 
