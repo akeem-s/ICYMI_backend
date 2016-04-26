@@ -7,7 +7,7 @@ class PlacesController < ApplicationController
 
   def today
     @today = Date.today
-    @places = Place.where(created_at: @today.beginning_of_day..@today.end_of_day)
+    @places = Place.includes(:categories).where(created_at: @today.beginning_of_day..@today.end_of_day)
     render json: @places
   end
 
@@ -33,6 +33,12 @@ class PlacesController < ApplicationController
     render json: @place
   end
 
+  def edit
+    @place = Place.find_by(id: params[:id])
+    @place.update(favorite: true)
+    binding.pry
+    @place.save
+  end
 
   def create
     @places = []
@@ -40,10 +46,10 @@ class PlacesController < ApplicationController
     long = r["latlong"]["coords"]["longitude"]
     lat = r["latlong"]["coords"]["latitude"]
     puts "lat: #{lat}  long: #{long}"
-    response = HTTParty.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=#{lat},#{long}&radius=30&key=AIzaSyACx-aPIUUV6JHWNk5q00uM6YkbSkPrz0E")
+    response = HTTParty.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=#{lat},#{long}&radius=30&key=" + ENV["GOOGLE_PLACE_API"])
     response['results'].each do |place|
       place_id = place['place_id']
-      @places << HTTParty.get('https://maps.googleapis.com/maps/api/place/details/json?placeid='+ place_id +'&key=AIzaSyACx-aPIUUV6JHWNk5q00uM6YkbSkPrz0E')
+      @places << HTTParty.get('https://maps.googleapis.com/maps/api/place/details/json?placeid='+ place_id +'&key=' + ENV["GOOGLE_PLACE_API"])
     end
 
 
