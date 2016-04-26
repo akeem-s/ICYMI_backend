@@ -40,10 +40,10 @@ class PlacesController < ApplicationController
     long = r["latlong"]["coords"]["longitude"]
     lat = r["latlong"]["coords"]["latitude"]
     puts "lat: #{lat}  long: #{long}"
-    response = HTTParty.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=#{lat},#{long}&radius=30&key=" + ENV["GOOGLE_PLACE_API"])
+    response = HTTParty.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=#{lat},#{long}&radius=30&key=AIzaSyACx-aPIUUV6JHWNk5q00uM6YkbSkPrz0E")
     response['results'].each do |place|
       place_id = place['place_id']
-      @places << HTTParty.get('https://maps.googleapis.com/maps/api/place/details/json?placeid='+ place_id +'&key=' + ENV["GOOGLE_PLACE_API"])
+      @places << HTTParty.get('https://maps.googleapis.com/maps/api/place/details/json?placeid='+ place_id +'&key=AIzaSyACx-aPIUUV6JHWNk5q00uM6YkbSkPrz0E')
     end
 
 
@@ -51,14 +51,32 @@ class PlacesController < ApplicationController
       new_p = Place.new({
         name: place['result']['name'],
       	address: place['result']['formatted_address'],
-      	phone: place['result']['international_phone_number'],
+      	phone: place['result']['formatted_phone_number'],
       	website: place['result']['website'],
       	user_id: 1,
       	favorite: false
       	})
         if new_p.save
+          if place['result']['opening_hours'] && place['result']['opening_hours']['weekday_text']
+            Hour.new({
+              place_id: new_p.id,
+              mon: place['result']['opening_hours']['weekday_text'][0],
+              tues: place['result']['opening_hours']['weekday_text'][1],
+              wed: place['result']['opening_hours']['weekday_text'][2],
+              thurs: place['result']['opening_hours']['weekday_text'][3],
+              fri: place['result']['opening_hours']['weekday_text'][4],
+              sat: place['result']['opening_hours']['weekday_text'][5],
+              sun: place['result']['opening_hours']['weekday_text'][6]
+              })
+          end
+          place['result']['types'].each do |category|
+            cat = Category.find_or_create_by(category: category)
+            PlaceCategory.create({
+                place_id: new_p.id,
+                category_id: cat.id
+            })
           new_p
-          p new_p
+          end
         else
           puts "Failed to save place"
           p new_p.errors.full_messages
