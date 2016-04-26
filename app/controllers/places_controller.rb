@@ -51,8 +51,6 @@ class PlacesController < ApplicationController
       place_id = place['place_id']
       @places << HTTParty.get('https://maps.googleapis.com/maps/api/place/details/json?placeid='+ place_id +'&key=' + ENV["GOOGLE_PLACE_API"])
     end
-
-
     @places.each do |place|
       new_p = Place.new({
         name: place['result']['name'],
