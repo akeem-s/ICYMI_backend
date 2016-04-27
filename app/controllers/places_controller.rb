@@ -1,5 +1,4 @@
 class PlacesController < ApplicationController
-
   def index
     @places = Place.all
     render json: @places
@@ -7,7 +6,7 @@ class PlacesController < ApplicationController
 
   def today
     @today = Date.today
-    @places = Place.includes(:categories).where(created_at: @today.beginning_of_day..@today.end_of_day)
+    @places = Place.includes(:categories).where(created_at: @today.beginning_of_day..@today.end_of_day).order("created_at ASC")
     render json: @places
   end
 
@@ -91,7 +90,8 @@ class PlacesController < ApplicationController
 
   def update
     place = Place.find_by(id: params[:id])
-    place.update_attribute(:favorite, true)
+    # place.update_attribute(:favorite, true)
+    place[:favorite] = true
     place.save
     p place
   end
