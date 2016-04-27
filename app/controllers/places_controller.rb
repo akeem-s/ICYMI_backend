@@ -36,7 +36,6 @@ class PlacesController < ApplicationController
   def edit
     @place = Place.find_by(id: params[:id])
     @place.update(favorite: true)
-    binding.pry
     @place.save
   end
 
