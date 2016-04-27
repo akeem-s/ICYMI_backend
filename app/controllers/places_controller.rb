@@ -90,10 +90,13 @@ class PlacesController < ApplicationController
 
   def update
     place = Place.find_by(id: params[:id])
-    # place.update_attribute(:favorite, true)
-    place[:favorite] = true
-    place.save
-    p place
+    if place[:favorite] == true
+      place[:favorite] = false
+      place.save
+    else
+      place[:favorite] = true
+      place.save
+    end
   end
 
 end
