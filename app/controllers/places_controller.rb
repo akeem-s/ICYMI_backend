@@ -90,7 +90,10 @@ class PlacesController < ApplicationController
   end
 
   def update
-    binding.pry
+    place = Place.find_by(id: params[:id])
+    place.update_attribute(:favorite, true)
+    place.save
+    p place
   end
 
 end
