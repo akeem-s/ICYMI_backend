@@ -12,13 +12,13 @@ class PlacesController < ApplicationController
 
   def yesterday
     @yesterday = Date.yesterday
-    @places = Place.where(created_at: @yesterday.beginning_of_day..@yesterday.end_of_day)
+    @places = Place.where(created_at: @yesterday.beginning_of_day..@yesterday.end_of_day).order("created_at ASC")
     render json: @places
   end
 
   def two_days
     @two_days = 2.days.ago
-    @places = Place.where(created_at: @two_days.beginning_of_day..@two_days.end_of_day)
+    @places = Place.where(created_at: @two_days.beginning_of_day..@two_days.end_of_day).order("created_at ASC")
     render json: @places
   end
 
