@@ -6,7 +6,7 @@
 
 ## Summary
 
-This is the Ruby on Rails backend server we created that acts as an API for our IOS app. Check out out the front-end[ICYMI(In Case You Missed It)](https://github.com/nyc-sea-lions-2016/Incase_Frontend)
+This is the Ruby on Rails backend server we created that acts as an API for our IOS app. Check out out the front-end [ICYMI(In Case You Missed It)](https://github.com/nyc-sea-lions-2016/Incase_Frontend)
 
 ## Technologies/APIs
 
