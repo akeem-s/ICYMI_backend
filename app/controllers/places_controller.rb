@@ -72,6 +72,7 @@ class PlacesController < ApplicationController
               })
           end
           place['result']['types'].each do |category|
+            category.gsub!("_"," ")
             cat = Category.find_or_create_by(category: category)
             PlaceCategory.create({
                 place_id: new_p.id,
