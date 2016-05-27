@@ -17,7 +17,7 @@ This is the Ruby on Rails backend server we created that acts as an API for our 
 ## Future 
 
 * Create a Web application.
-* Create an Adroid App.
+* Create an Android App.
 * Push notifications from  businesses
 
 ## Our Awesome Team
